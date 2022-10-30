@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Homework6_u21653268.Models.ReportVM>
+@using Newtonsoft.Json;
+@{
+    ViewBag.Title = "Report";
+}
+
+<br />
+<h2>Mountain Bike Order Report</h2>
+<hr/>
+
+<div>
+    <canvas id="myChart" width="400" height="250"></canvas>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var jsonString = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+            console.log(jsonString);
+
+            var labels = [];
+            var values = [];
+            for (var i = 0; i < jsonString.length - 1; i++) {
+                labels.push(jsonString[i].month);
+                values.push(parseInt(jsonString[i].numSold));
+            }
+
+            var chartHtml = document.getElementById("myChart");
+
+            var chart = new Chart(chartHtml, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Number of Mountain Bikes Sold",
+                        data: values,
+                        backgroundColor: ["#ec7299",
+                            "#fb828e",
+                            "#ff9486",
+                            "#ffa981",
+                            "#ffbe81",
+                            "#ffd488",
+                            "#ebe78b",
+                            "#d5e683",
+                            "#bce47f",
+                            "#a0e27f",
+                            "#80e082",
+                            "#55dd89"],
+                        borderColor: ["#d0357b",
+                            "#e55271",
+                            "#f3706a",
+                            "#fb8f69",
+                            "#ffad70",
+                            "#ffcb80",
+                            "#e9e185",
+                            "#d0dc76",
+                            "#b3d86a",
+                            "#92d363",
+                            "#69ce61",
+                            "#25c863"],
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    plugins: {
+                        text: {
+                            display: true,
+                            text: "Number of Mountain Bikes Sold"
+
+                        },
+                        legend: {
+                            display: true
+
+                        }
+                    },
+                    animation: false,
+                    animations: {
+                        colors: false,
+                        x: false
+                    },
+                    
+                    transitions: {
+                        active: {
+                            animation: {
+                                duration: 0
+                            }
+                        }
+                    }
+                }
+            });
+
+            chart.Render();
+        });
+    </script>
+}

@@ -1,0 +1,120 @@
+﻿@model PagedList.IPagedList<Homework6_u21653268.Models.Order>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Index";
+}
+<br/>
+<h2>Orders</h2>
+
+@using (Html.BeginForm())
+    {
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <input type="date" name="searchDate" id="searchDate" class="form-control date" value="" />
+            </div>
+            <div class="col-auto">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+
+
+<hr />
+
+@foreach (var order in Model)
+{
+    
+    <div>
+        <h3>Order @order.order_id - @order.order_date.ToString("yyyy/MM/dd")</h3>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        List Price
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    decimal total = 0;
+                }
+                @foreach (var item in order.order_items)
+                {
+                    
+                    <tr data-modal="" onclick="ShowDetailsModal(@item.product_id)">
+                        <td>@item.product.product_name</td>
+                        <td>@item.product.list_price</td>
+                        <td>@item.quantity</td>
+                        <td>
+                            @{
+                                decimal result;
+                                result = item.quantity * item.list_price;
+
+                                total = total + result;
+                            }
+                            @result
+                        </td>
+                    </tr>
+                                                
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="font-weight-bold">Grand Total:</td>
+                    <td class="font-weight-bold">@total</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+}
+
+<div class="page_numbers page_numbers-sec">
+    <div class="pagination">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+    </div>
+</div>
+
+<div id="product-deets" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="details-modal"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function ShowDetailsModal(id) {
+            var data = { product_id: id };
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/orders/Details/' + id,
+                    contentType: 'application/json; charset=utf=8',
+                    data: data,
+                    success: function (result) {
+                        $('#details-modal').html(result);
+                        $('#product-deets').modal('show');
+                    },
+                    error: function (er) {
+                        alert(er);
+                    }
+                });
+        };
+    </script>
+    }

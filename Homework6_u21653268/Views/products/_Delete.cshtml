@@ -1,0 +1,36 @@
+﻿@model Homework6_u21653268.Models.product
+<link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+<script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+
+@using (Html.BeginForm("Delete", "products", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="modal-header">
+        <h2 class="modal-title">Are you sure you want to delete this Product?</h2>
+    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.product_id)
+
+<div class="modal-body">
+    @Html.LabelFor(model => model.product_name, new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.product_name, new { @class = "form-control", @readonly = "readonly" })
+
+    @Html.LabelFor(model => model.model_year, new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.model_year, new { @class = "form-control", @readonly = "readonly" })
+
+    @Html.LabelFor(model => model.list_price, new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.list_price, new { @class = "form-control", @readonly = "readonly" })
+
+    @Html.LabelFor(model => model.brand.brand_name, new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.brand.brand_name, new { @class = "form-control", @readonly = "readonly" })
+
+    @Html.LabelFor(model => model.category.category_name, new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.category.category_name, new { @class = "form-control ", @readonly = "readonly" })
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-danger">Delete</button>
+</div>
+}

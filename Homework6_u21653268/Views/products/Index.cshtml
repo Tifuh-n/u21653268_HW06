@@ -1,0 +1,115 @@
+﻿@model PagedList.IPagedList<Homework6_u21653268.Models.product>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+<h2>Products</h2>
+
+@using (Html.BeginForm("Index", "products", FormMethod.Get))
+{
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Enter product name..." })
+
+        </div>
+        <div class="col-auto">
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+        <div class="col-auto">
+            <a class="btn btn-info" data-modal="" id="btnCreate" onclick="OpenAddModal()">Create</a>
+        </div>
+    </div>
+}
+<br />
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Year
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Brand
+            </th>
+            <th>
+                Category
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.product_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.model_year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.list_price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.brand.brand_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.category.category_name)
+                </td>
+                <td>
+                    @Html.Raw("<a id='ViewEdit' data-modal='' onclick='OpenEditModal(" + item.product_id + ")'  title='Edit' class='btn btn-primary'>Edit</a>") |
+                    @Html.Raw("<a id='ViewDetail' data-modal=''  onclick='OpenDetailsModal(" + item.product_id + ")'  title='Details' class='btn btn-info'>Details</a>") |
+                    @Html.Raw("<a id='ViewDelete' data-modal='' onclick='OpenDeleteModal(" + item.product_id + ")'  title='Delete' class='btn btn-danger'>Delete</a>")
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="page_numbers page_numbers-sec">
+    <div class="pagination">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+    </div>
+</div>
+
+<div id="modal-edit" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="modal-edit-content"></div>
+        </div>
+    </div>
+</div>
+<div id="modal-add" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="modal-add-content"></div>
+        </div>
+    </div>
+</div>
+<div id="modal-delete" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="modal-delete-content"></div>
+        </div>
+    </div>
+</div>
+<div id="modal-details" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="modal-details-content"></div>
+        </div>
+    </div>
+</div>
+
+
